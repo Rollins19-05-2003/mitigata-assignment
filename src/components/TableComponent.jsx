@@ -64,13 +64,18 @@ const TableComponent = ({ usersData, setUsersData }) => {
 
     let filtered = dataToFilter.filter((record) => {
       const recordDate = parseDate(record.details.date);
+      // console.log(recordDate); // Thu Dec 19 2024 00:00:00 GMT+0530 (India Standard Time)
       const fromDate = dateRange.from ? new Date(dateRange.from) : null;
+      // console.log(fromDate);  // Wed Dec 25 2024 05:30:00 GMT+0530 (India Standard Time)
       const toDate = dateRange.to ? new Date(dateRange.to) : null;
-
-      // Date range filter
+      const normalizeDate = (date) => {
+        return date ? new Date(date.getFullYear(), date.getMonth(), date.getDate()) : null;
+      };
+      // console.log(normalizeDate(recordDate)) // Thu Dec 19 2024 00:00:00 GMT+0530 (India Standard Time)
+      // console.log(normalizeDate(fromDate)) // Thu Dec 19 2024 00:00:00 GMT+0530 (India Standard Time)
       const isWithinDateRange =
-        (!fromDate || recordDate >= fromDate) &&
-        (!toDate || recordDate <= toDate);
+        (!fromDate || normalizeDate(recordDate) >= normalizeDate(fromDate)) &&
+        (!toDate || normalizeDate(recordDate) <= normalizeDate(toDate));
 
       // Global search filter (name & email)
       const searchMatch = searchTerm
